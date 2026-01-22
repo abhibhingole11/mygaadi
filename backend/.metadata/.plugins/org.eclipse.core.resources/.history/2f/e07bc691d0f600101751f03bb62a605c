@@ -1,0 +1,5 @@
+package com.mygaadi.dto;
+
+public class WishlistResponse {
+
+}

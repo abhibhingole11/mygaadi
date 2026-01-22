@@ -1,0 +1,57 @@
+package com.mygaadi.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.mygaadi.dto.AddCarRequest;
+import com.mygaadi.entity.Car;
+import com.mygaadi.entity.CarStatus;
+import com.mygaadi.entity.User;
+import com.mygaadi.repository.CarRepository;
+import com.mygaadi.repository.UserRepository;
+
+@Service
+public class CarService {
+
+    private final CarRepository carRepository;
+    private final UserRepository userRepository;
+
+    public CarService(CarRepository carRepository, UserRepository userRepository) {
+        this.carRepository = carRepository;
+        this.userRepository = userRepository;
+    }
+    public List<Car> getPendingCars() {
+        return carRepository.findByStatus(CarStatus.PENDING);
+    }
+
+    public void addCar(AddCarRequest request) {
+
+        User seller = userRepository.findById(request.sellerId)
+                .orElseThrow(() -> new RuntimeException("Seller not found"));
+
+        Car car = new Car();
+        car.setMake(request.make);
+        car.setModel(request.model);
+        car.setYear(request.year);
+        car.setPrice(request.price);
+        car.setFuelType(request.fuelType);
+        car.setTransmission(request.transmission);
+        car.setSeller(seller);
+        car.setStatus(CarStatus.PENDING);
+
+        carRepository.save(car);
+    }
+    public void approveCar(Long carId) {
+    	Car car = carRepository.findById(carId).orElseThrow(()->new RuntimeException("car non found"));
+    	car.setStatus(CarStatus.APPROVED);
+    	carRepository.save(car);
+    }
+    public void rejectCar(Long carId) {
+    	Car car = carRepository.findById(carId).orElseThrow(()->new RuntimeException("car not fond"));
+        car.setStatus(CarStatus.REJECTED);
+        carRepository.save(car);
+    
+    
+    }
+}

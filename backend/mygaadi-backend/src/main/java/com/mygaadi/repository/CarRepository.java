@@ -1,0 +1,22 @@
+package com.mygaadi.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.mygaadi.entity.Car;
+import com.mygaadi.entity.CarStatus;
+
+public interface CarRepository extends JpaRepository<Car, Long> {
+	List<Car> findByStatus(CarStatus status);
+	List<Car> findByStatusAndPriceLessThanEqual(CarStatus status, Double price);
+
+    List<Car> findByStatusAndYearGreaterThanEqual(CarStatus status, Integer year);
+
+    List<Car> findByStatusAndMakeContainingIgnoreCaseOrStatusAndModelContainingIgnoreCase(
+            CarStatus status1, String make,
+            CarStatus status2, String model
+    );
+    long countByStatus(CarStatus status);
+
+}

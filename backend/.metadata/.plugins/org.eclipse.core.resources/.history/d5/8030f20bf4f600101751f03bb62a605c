@@ -1,0 +1,7 @@
+package com.mygaadi.entity;
+
+public enum CarStatus {
+    PENDING,
+    APPROVED,
+    REJECTED
+}

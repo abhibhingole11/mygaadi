@@ -1,0 +1,42 @@
+package com.mygaadi.entity;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Table(name = "cars")
+@Getter
+@Setter
+public class Car {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long carId;
+
+    @Column(nullable = false)
+    private String make;
+
+    @Column(nullable = false)
+    private String model;
+
+    @Column(nullable = false)
+    private int year;
+
+    @Column(nullable = false)
+    private double price;
+
+    private String fuelType;
+    private String transmission;
+
+    @Enumerated(EnumType.STRING)
+    private CarStatus status = CarStatus.PENDING;
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false)
+    private User seller;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+}

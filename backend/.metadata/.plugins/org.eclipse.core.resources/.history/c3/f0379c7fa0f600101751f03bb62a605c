@@ -1,0 +1,22 @@
+package com.mygaadi.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class CheckController {
+
+    @GetMapping("/")
+    public String home() {
+        return "Backend is running";
+    }
+
+    @GetMapping("/home")
+    public String abc() {
+        return "OK";
+    }
+    @GetMapping("/hello")
+    public String hel() {
+    	return "hello world";
+    }
+}

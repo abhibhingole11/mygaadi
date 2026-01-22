@@ -1,0 +1,5 @@
+package com.mygaadi.entity;
+
+public class Transaction {
+
+}
