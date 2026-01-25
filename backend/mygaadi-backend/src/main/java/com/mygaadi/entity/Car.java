@@ -39,6 +39,10 @@ public class Car {
     @ManyToOne
     @JoinColumn(name = "seller_id", nullable = false)
     private User seller;
+    
+    @Column(length = 500)
+    private String imageUrl;
+
 
     private LocalDateTime createdAt = LocalDateTime.now();
 }

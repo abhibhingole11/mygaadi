@@ -1,9 +1,11 @@
 package com.mygaadi.service;
 
 import java.util.List;
+
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mygaadi.dto.AddCarRequest;
 import com.mygaadi.dto.AdminCarResponse;
@@ -24,34 +26,48 @@ public class CarService {
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
     private final  WishlistRepository wishlistRepository;
+    private final CloudinaryService cloudinaryService;
 
-    public CarService(CarRepository carRepository, UserRepository userRepository,TransactionRepository transactionRepository,WishlistRepository wishlistRepository) {
+    public CarService(CarRepository carRepository, UserRepository userRepository,TransactionRepository transactionRepository,WishlistRepository wishlistRepository,CloudinaryService cloudinaryService) {
         this.carRepository = carRepository;
         this.userRepository = userRepository;
         this.transactionRepository = transactionRepository;
         this.wishlistRepository = wishlistRepository;
+        this.cloudinaryService = cloudinaryService;
     }
     public List<Car> getPendingCars() {
         return carRepository.findByStatus(CarStatus.PENDING);
     }
 
-    public void addCar(AddCarRequest request) {
+    
 
-        User seller = userRepository.findById(request.sellerId)
+    public void addCar(
+            String make,
+            String model,
+            int year,
+            double price,
+            Long sellerId,
+            MultipartFile image
+    ) {
+
+        User seller = userRepository.findById(sellerId)
                 .orElseThrow(() -> new RuntimeException("Seller not found"));
 
+        // upload image to Cloudinary
+        String imageUrl = cloudinaryService.uploadImage(image);
+
         Car car = new Car();
-        car.setMake(request.make);
-        car.setModel(request.model);
-        car.setYear(request.year);
-        car.setPrice(request.price);
-        car.setFuelType(request.fuelType);
-        car.setTransmission(request.transmission);
+        car.setMake(make);
+        car.setModel(model);
+        car.setYear(year);
+        car.setPrice(price);
         car.setSeller(seller);
+        car.setImageUrl(imageUrl);
         car.setStatus(CarStatus.PENDING);
 
         carRepository.save(car);
     }
+
     public void approveCar(Long carId) {
     	Car car = carRepository.findById(carId).orElseThrow(()->new RuntimeException("car non found"));
     	car.setStatus(CarStatus.APPROVED);
@@ -76,6 +92,7 @@ public class CarService {
     	                dto.fuelType = car.getFuelType();
     	                dto.transmission = car.getTransmission();
     	                dto.sellerName = car.getSeller().getFirstName();
+    	                dto.imageUrl = car.getImageUrl();
     	                return dto;
     			}).collect(Collectors.toList());
     			

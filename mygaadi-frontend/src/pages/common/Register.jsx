@@ -1,123 +1,127 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../../api/app";
 
 const Register = () => {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
-    role: "Buyer"
+    role: "BUYER",
   });
 
   const [error, setError] = useState("");
 
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
-    if (
-      !formData.firstName ||
-      !formData.lastName ||
-      !formData.email ||
-      !formData.password
-    ) {
-      setError("All fields are required");
+    // 🔐 PASSWORD VALIDATION
+    if (!passwordRegex.test(form.password)) {
+      setError(
+        "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character."
+      );
       return;
     }
 
-    // 🔴 TEMPORARY REGISTER LOGIC (Dummy)
-    // Later replaced with backend API
-    alert(
-      `Registered successfully as ${formData.role}\nPlease login now`
-    );
-
-    navigate("/login");
+    try {
+      await api.post("/api/auth/register", form);
+      alert("Registration successful. Please login.");
+      navigate("/login");
+    } catch (err) {
+      setError("Registration failed. Email may already exist.");
+    }
   };
 
   return (
-    <div style={{ padding: "30px", maxWidth: "450px", margin: "auto" }}>
-      <h2>Register</h2>
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-5">
+          <div className="card shadow">
+            <div className="card-body p-4">
+              <h3 className="text-center mb-3">Create Account</h3>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+              {error && (
+                <div className="alert alert-danger">{error}</div>
+              )}
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="firstName"
-          placeholder="First Name"
-          value={formData.firstName}
-          onChange={handleChange}
-          style={inputStyle}
-        />
+              <form onSubmit={handleSubmit}>
+                <input
+                  className="form-control mb-2"
+                  placeholder="First Name"
+                  name="firstName"
+                  onChange={handleChange}
+                  required
+                />
 
-        <input
-          type="text"
-          name="lastName"
-          placeholder="Last Name"
-          value={formData.lastName}
-          onChange={handleChange}
-          style={inputStyle}
-        />
+                <input
+                  className="form-control mb-2"
+                  placeholder="Last Name"
+                  name="lastName"
+                  onChange={handleChange}
+                  required
+                />
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          style={inputStyle}
-        />
+                <input
+                  className="form-control mb-2"
+                  placeholder="Email"
+                  name="email"
+                  type="email"
+                  onChange={handleChange}
+                  required
+                />
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          style={inputStyle}
-        />
+                <input
+                  className="form-control mb-2"
+                  placeholder="Password"
+                  name="password"
+                  type="password"
+                  onChange={handleChange}
+                  required
+                />
 
-        <select
-          name="role"
-          value={formData.role}
-          onChange={handleChange}
-          style={inputStyle}
-        >
-          <option value="Buyer">Buyer</option>
-          <option value="Seller">Seller</option>
-        </select>
+                <select
+                  className="form-control mb-3"
+                  name="role"
+                  onChange={handleChange}
+                >
+                  <option value="BUYER">Buyer</option>
+                  <option value="SELLER">Seller</option>
+                </select>
 
-        <button type="submit" style={btnStyle}>
-          Register
-        </button>
-      </form>
+                <div className="d-grid">
+                  <button className="btn btn-dark">
+                    Register
+                  </button>
+                </div>
+              </form>
+
+              <p className="text-center mt-3 mb-0">
+                Already have an account?{" "}
+                <span
+                  className="text-primary"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => navigate("/login")}
+                >
+                  Login
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
-};
-
-const inputStyle = {
-  width: "100%",
-  padding: "10px",
-  marginBottom: "10px"
-};
-
-const btnStyle = {
-  width: "100%",
-  padding: "10px",
-  backgroundColor: "#198754",
-  color: "white",
-  border: "none",
-  cursor: "pointer"
 };
 
 export default Register;

@@ -13,6 +13,8 @@ const ListCar = () => {
     price: "",
   });
 
+  const [image, setImage] = useState(null);
+
   const handleChange = (e) => {
     setCarData({
       ...carData,
@@ -23,13 +25,20 @@ const ListCar = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // ✅ Step C: use FormData
+    const formData = new FormData();
+    formData.append("make", carData.make);
+    formData.append("model", carData.model);
+    formData.append("year", carData.year);
+    formData.append("price", carData.price);
+    formData.append("sellerId", user.userId);
+    formData.append("image", image); // 🔥 must be "image"
+
     try {
-      await api.post("/api/seller/cars", {
-        make: carData.make,
-        model: carData.model,
-        year: carData.year,
-        price: carData.price,
-        sellerId: user.userId, // 🔴 IMPORTANT
+      await api.post("/api/seller/cars", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       alert("Car submitted for admin approval");
@@ -41,6 +50,7 @@ const ListCar = () => {
         year: "",
         price: "",
       });
+      setImage(null);
 
     } catch (error) {
       console.error(error);
@@ -99,6 +109,18 @@ const ListCar = () => {
             name="price"
             value={carData.price}
             onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* ✅ Image upload (seller only) */}
+        <div className="mb-3">
+          <label className="form-label">Car Image</label>
+          <input
+            type="file"
+            className="form-control"
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])}
             required
           />
         </div>

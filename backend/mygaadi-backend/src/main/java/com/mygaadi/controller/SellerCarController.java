@@ -1,8 +1,8 @@
 package com.mygaadi.controller;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.mygaadi.dto.AddCarRequest;
 import com.mygaadi.service.CarService;
 
 @RestController
@@ -17,8 +17,15 @@ public class SellerCarController {
     }
 
     @PostMapping
-    public String addCar(@RequestBody AddCarRequest request) {
-        carService.addCar(request);
+    public String addCar(
+            @RequestParam String make,
+            @RequestParam String model,
+            @RequestParam int year,
+            @RequestParam double price,
+            @RequestParam Long sellerId,
+            @RequestParam("image") MultipartFile image
+    ) {
+        carService.addCar(make, model, year, price, sellerId, image);
         return "Car added successfully and waiting for admin approval";
     }
 }

@@ -10,4 +10,5 @@ public class BuyerCarResponse {
     public String fuelType;
     public String transmission;
     public String sellerName;
+    public String imageUrl;
 }

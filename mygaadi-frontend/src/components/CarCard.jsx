@@ -1,57 +1,75 @@
-import { useNavigate } from "react-router-dom";
-
-const CarCard = ({ car, onBuy, onWishlist }) => {
-  const navigate = useNavigate();
-
+const CarCard = ({
+  car,
+  onView,
+  onBuy,
+  onWishlist,
+  showBuy = true,
+  showWishlist = true,
+  isWishlisted = false
+}) => {
+ 
   return (
-    <div className="card h-100 shadow-sm">
-      {car.image && (
-        <img
-          src={car.image}
-          className="card-img-top"
-          alt={`${car.make} ${car.model}`}
-          style={{ height: "160px", objectFit: "cover" }}
-        />
-      )}
+    <div className="card h-100 shadow-sm border-0">
+      {/* IMAGE */}
+      <img
+        src={car.image || "/images/default-car.jpg"}
+        alt={car.name}
+        className="card-img-top"
+        style={{
+          height: "190px",
+          objectFit: "cover"
+        }}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "/images/default-car.jpg";
+        }}
+      />
 
-      <div className="card-body">
-        <h5 className="card-title">
-          {car.make} {car.model}
-        </h5>
+      {/* BODY */}
+      <div className="card-body d-flex flex-column">
+        <h5 className="fw-semibold">{car.name}</h5>
+        <p className="text-muted mb-3">₹ {car.price}</p>
 
-        <p className="card-text mb-1">
-          <strong>Year:</strong> {car.year}
-        </p>
-        <p className="card-text mb-2">
-          <strong>Price:</strong> ₹{car.price}
-        </p>
-
-        <div className="d-grid gap-2">
-          <button
-            className="btn btn-outline-primary btn-sm"
-            onClick={() =>
-              navigate(`/car/${car.carId}`, { state: { car } })
-            }
-          >
-            View Details
-          </button>
-
-          {onBuy && (
+        <div className="mt-auto d-grid gap-2">
+          {/* VIEW */}
+          {onView && (
             <button
-              className="btn btn-success btn-sm"
-              onClick={() => onBuy(car.carId)}
+              className="btn btn-outline-dark btn-sm"
+              onClick={() => onView(car)}
             >
-              Buy Now
+              View Details
             </button>
           )}
 
-          {onWishlist && (
+          {/* BUY */}
+          {showBuy && onBuy && (
             <button
-              className="btn btn-outline-danger btn-sm"
-              onClick={() => onWishlist(car.carId)}
+              className="btn btn-dark btn-sm"
+              onClick={() => onBuy(car)}
             >
-              ❤️ Add to Wishlist
+              Buy Car
             </button>
+          )}
+
+          {/* WISHLIST */}
+          {showWishlist && (
+            isWishlisted ? (
+              <button
+                className="btn btn-secondary btn-sm"
+                disabled
+              >
+                ❤️ Wishlisted
+              </button>
+            ) : (
+              onWishlist && (
+                <button
+                  className="btn btn-outline-secondary btn-sm"
+                  onClick={() => onWishlist(car)}
+                >
+                  ♡ Add to Wishlist
+                </button>
+              )
+            )
           )}
         </div>
       </div>
