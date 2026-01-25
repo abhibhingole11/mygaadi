@@ -95,3 +95,90 @@ java.sql.SQLException: Data truncated for column 'status' at row 1
 -------------------------------------------------
     ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
 solution:  
+
+
+
+2)-------------------
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jwtUtil' defined in file [C:\project 4\backend\mygaadi-backend\target\classes\com\mygaadi\security\JwtUtil.class]: Failed to instantiate [com.mygaadi.security.JwtUtil]: Constructor threw exception
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(AbstractAutowireCapableBeanFactory.java:1344) ~[spring-beans-7.0.2.jar:7.0.2]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1231) ~[spring-beans-7.0.2.jar:7.0.2]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:565) ~[spring-beans-7.0.2.jar:7.0.2]
+
+	why this erro(we cant write a system.out.println() inside jwtUtil class) 
+
+	-------------------
+
+	3)
+	org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jwtUtil': Invocation of init method failed
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:220) ~[spring-beans-7.0.2.jar:7.0.2]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:426) ~[spring-beans-7.0.2.jar:7.0.2]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1809) ~[spring-beans-7.0.2.jar:7.0.2]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:603) ~[spring-beans-7.0.2.jar:7.0.2]
+
+	why---(Because your JWT secret is TOO SHORT.)
+	Since you are using:
+
+SignatureAlgorithm.HS256
+
+
+👉 HS256 requires a secret key of at least 256 bits = 32 characters
+
+If it’s shorter, Spring throws:
+
+BeanCreationException: Invocation of init method failed
+
+
+Exactly what you’re seeing.
+
+✅ Fix (DO THIS FIRST)
+
+Open application.properties
+Replace your secret with a longer one:
+
+jwt.secret=mygaadi_super_secret_key_12345678901234567890
+jwt.expiration=86400000
+
+
+📌 Count characters → must be 32+
+
+Example safe secrets:
+
+mygaadi_jwt_secret_key_for_spring_security_2026
+
+
+
+Why the error happens at startup
+
+You are using:
+
+@PostConstruct
+public void init() {
+    jwtKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+}
+
+
+Spring creates the bean → runs init()
+JWT library validates key length → ❌ BOOM → app fails to start
+
+So:
+
+❌ Not a Spring bug
+
+❌ Not your logic
+
+✅ Just key length
+
+
+
+How to confirm (optional)
+
+If you enable debug, you’d see something like:
+
+io.jsonwebtoken.security.WeakKeyException:
+The specified key byte array is too short
+
+🛠️ Quick checklist
+
+✅ Update jwt.secret (32+ chars)
+✅ Restart backend
+✅ App should start cleanly
