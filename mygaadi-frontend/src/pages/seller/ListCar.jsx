@@ -35,11 +35,8 @@ const ListCar = () => {
     formData.append("image", image); // 🔥 must be "image"
 
     try {
-      await api.post("/api/seller/cars", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+     await api.post("/api/seller/cars", formData);
+
 
       alert("Car submitted for admin approval");
 
