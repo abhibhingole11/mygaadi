@@ -19,43 +19,51 @@ const ManageUsers = () => {
   }, []);
 
   return (
-    <div className="container mt-4">
-      <h3>Manage Users</h3>
+    <div className="container mt-4 pb-5">
+      <div className="admin-page-header">
+        <h2 className="fw-bold mb-2">User Management</h2>
+        <p className="mb-0 opacity-75">View and manage platform users. You can restrict access for buyers and sellers here.</p>
+      </div>
 
-      <table className="table table-bordered mt-3">
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
+      <div className="premium-table-container">
+        <table className="premium-table">
+          <thead>
+            <tr>
+              <th>User Email</th>
+              <th>Account Role</th>
+              <th>Current Status</th>
+              <th className="text-end">Management Actions</th>
+            </tr>
+          </thead>
 
-        <tbody>
-          {users
-            .filter((u) => u.role !== "ADMIN")
-            .map((u) => (
-              <tr key={u.userId}>
-                <td>{u.email}</td>
-                <td>{u.role}</td>
-                <td>
-                  {u.restricted ? "Restricted ❌" : "Active ✅"}
-                </td>
-                <td>
-                  <button
-                    className={`btn btn-sm ${
-                      u.restricted ? "btn-success" : "btn-danger"
-                    }`}
-                    onClick={() => toggleUser(u.userId)}
-                  >
-                    {u.restricted ? "Unrestrict" : "Restrict"}
-                  </button>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+          <tbody>
+            {users
+              .filter((u) => u.role !== "ADMIN")
+              .map((u) => (
+                <tr key={u.userId}>
+                  <td className="fw-medium">{u.email}</td>
+                  <td>
+                    <span className="badge bg-light text-dark border">{u.role}</span>
+                  </td>
+                  <td>
+                    <span className={`status-badge ${u.restricted ? "status-restricted" : "status-active"}`}>
+                      {u.restricted ? "Restricted" : "Active"}
+                    </span>
+                  </td>
+                  <td className="text-end">
+                    <button
+                      className={`btn btn-sm ${u.restricted ? "btn-success" : "btn-danger"
+                        } px-3 rounded-pill`}
+                      onClick={() => toggleUser(u.userId)}
+                    >
+                      {u.restricted ? "Unrestrict User" : "Restrict User"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

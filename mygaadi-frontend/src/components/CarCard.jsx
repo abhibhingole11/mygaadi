@@ -7,16 +7,16 @@ const CarCard = ({
   showWishlist = true,
   isWishlisted = false
 }) => {
- 
+
   return (
-    <div className="card h-100 shadow-sm border-0">
+    <div className="card card-premium h-100">
       {/* IMAGE */}
       <img
         src={car.image || "/images/default-car.jpg"}
         alt={car.name}
         className="card-img-top"
         style={{
-          height: "190px",
+          height: "220px",
           objectFit: "cover"
         }}
         onError={(e) => {
@@ -27,14 +27,17 @@ const CarCard = ({
 
       {/* BODY */}
       <div className="card-body d-flex flex-column">
-        <h5 className="fw-semibold">{car.name}</h5>
-        <p className="text-muted mb-3">₹ {car.price}</p>
+        <h5 className="fw-bold mb-1">{car.name}</h5>
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <span className="badge bg-light text-dark border">{car.year}</span>
+          <h6 className="text-primary fw-bold mb-0">₹ {parseInt(car.price).toLocaleString()}</h6>
+        </div>
 
         <div className="mt-auto d-grid gap-2">
           {/* VIEW */}
           {onView && (
             <button
-              className="btn btn-outline-dark btn-sm"
+              className="btn btn-outline-premium w-100"
               onClick={() => onView(car)}
             >
               View Details
@@ -44,10 +47,10 @@ const CarCard = ({
           {/* BUY */}
           {showBuy && onBuy && (
             <button
-              className="btn btn-dark btn-sm"
+              className="btn btn-premium w-100"
               onClick={() => onBuy(car)}
             >
-              Buy Car
+              Buy Now
             </button>
           )}
 

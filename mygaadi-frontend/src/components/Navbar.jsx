@@ -17,7 +17,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+    <nav className="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top px-4 shadow-sm">
       <Link className="navbar-brand" to="/">
         MyGaadi
       </Link>
@@ -66,14 +66,6 @@ const Navbar = () => {
             </li>
           )}
 
-          {/* 🟥 ADMIN */}
-          {user && user.role === "ADMIN" && (
-            <li className="nav-item">
-              <Link className="nav-link" to="/admin">
-                Admin Dashboard
-              </Link>
-            </li>
-          )}
 
           {/* 👤 USER + LOGOUT */}
           {user && (

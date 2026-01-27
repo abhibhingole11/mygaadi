@@ -25,21 +25,22 @@ public class CarService {
     private final CarRepository carRepository;
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
-    private final  WishlistRepository wishlistRepository;
+    private final WishlistRepository wishlistRepository;
     private final CloudinaryService cloudinaryService;
 
-    public CarService(CarRepository carRepository, UserRepository userRepository,TransactionRepository transactionRepository,WishlistRepository wishlistRepository,CloudinaryService cloudinaryService) {
+    public CarService(CarRepository carRepository, UserRepository userRepository,
+            TransactionRepository transactionRepository, WishlistRepository wishlistRepository,
+            CloudinaryService cloudinaryService) {
         this.carRepository = carRepository;
         this.userRepository = userRepository;
         this.transactionRepository = transactionRepository;
         this.wishlistRepository = wishlistRepository;
         this.cloudinaryService = cloudinaryService;
     }
+
     public List<Car> getPendingCars() {
         return carRepository.findByStatus(CarStatus.PENDING);
     }
-
-    
 
     public void addCar(
             String make,
@@ -47,8 +48,7 @@ public class CarService {
             int year,
             double price,
             Long sellerId,
-            MultipartFile image
-    ) {
+            MultipartFile image) {
 
         User seller = userRepository.findById(sellerId)
                 .orElseThrow(() -> new RuntimeException("Seller not found"));
@@ -69,37 +69,35 @@ public class CarService {
     }
 
     public void approveCar(Long carId) {
-    	Car car = carRepository.findById(carId).orElseThrow(()->new RuntimeException("car non found"));
-    	car.setStatus(CarStatus.APPROVED);
-    	carRepository.save(car);
-    }
-    public void rejectCar(Long carId) {
-    	Car car = carRepository.findById(carId).orElseThrow(()->new RuntimeException("car not fond"));
-        car.setStatus(CarStatus.REJECTED);
+        Car car = carRepository.findById(carId).orElseThrow(() -> new RuntimeException("car non found"));
+        car.setStatus(CarStatus.APPROVED);
         carRepository.save(car);
-    
-    
-    }
-    public List<BuyerCarResponse>getApprovedCars(){
-    	return carRepository.findByStatus(CarStatus.APPROVED).stream()
-    			.map(car->{
-    				BuyerCarResponse dto = new BuyerCarResponse();
-    				dto.carId = car.getCarId();
-    				 dto.make = car.getMake();
-    	                dto.model = car.getModel();
-    	                dto.year = car.getYear();
-    	                dto.price = car.getPrice();
-    	                dto.fuelType = car.getFuelType();
-    	                dto.transmission = car.getTransmission();
-    	                dto.sellerName = car.getSeller().getFirstName();
-    	                dto.imageUrl = car.getImageUrl();
-    	                return dto;
-    			}).collect(Collectors.toList());
-    			
-    	
-    	
     }
 
+    public void rejectCar(Long carId) {
+        Car car = carRepository.findById(carId).orElseThrow(() -> new RuntimeException("car not fond"));
+        car.setStatus(CarStatus.REJECTED);
+        carRepository.save(car);
+
+    }
+
+    public List<BuyerCarResponse> getApprovedCars() {
+        return carRepository.findByStatus(CarStatus.APPROVED).stream()
+                .map(car -> {
+                    BuyerCarResponse dto = new BuyerCarResponse();
+                    dto.carId = car.getCarId();
+                    dto.make = car.getMake();
+                    dto.model = car.getModel();
+                    dto.year = car.getYear();
+                    dto.price = car.getPrice();
+                    dto.fuelType = car.getFuelType();
+                    dto.transmission = car.getTransmission();
+                    dto.sellerName = car.getSeller().getFirstName();
+                    dto.imageUrl = car.getImageUrl();
+                    return dto;
+                }).collect(Collectors.toList());
+
+    }
 
     public List<BuyerCarResponse> getCarsByFilters(
             String keyword, Double maxPrice, Integer minYear) {
@@ -110,8 +108,7 @@ public class CarService {
             cars = carRepository
                     .findByStatusAndMakeContainingIgnoreCaseOrStatusAndModelContainingIgnoreCase(
                             CarStatus.APPROVED, keyword,
-                            CarStatus.APPROVED, keyword
-                    );
+                            CarStatus.APPROVED, keyword);
 
         } else if (maxPrice != null) {
             cars = carRepository
@@ -140,6 +137,7 @@ public class CarService {
                 })
                 .collect(Collectors.toList());
     }
+
     public void buyCar(Long buyerId, Long carId) {
 
         User buyer = userRepository.findById(buyerId)
@@ -166,6 +164,7 @@ public class CarService {
         wishlistRepository.findByBuyerAndCar(buyer, car)
                 .ifPresent(wishlistRepository::delete);
     }
+
     public List<AdminCarResponse> getAllCars() {
 
         return carRepository.findAll()
@@ -183,5 +182,35 @@ public class CarService {
                 .toList();
     }
 
+    public List<Car> getSellerCars(Long sellerId) {
+        return carRepository.findBySeller_UserId(sellerId);
+    }
 
+    public void updateCar(Long carId, String make, String model, int year, double price, MultipartFile image) {
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new RuntimeException("Car not found"));
+
+        if (make != null && !make.isEmpty())
+            car.setMake(make);
+        if (model != null && !model.isEmpty())
+            car.setModel(model);
+        if (year > 0)
+            car.setYear(year);
+        if (price > 0)
+            car.setPrice(price);
+
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = cloudinaryService.uploadImage(image);
+            car.setImageUrl(imageUrl);
+        }
+
+        carRepository.save(car);
+    }
+
+    public void deleteCar(Long carId) {
+        if (!carRepository.existsById(carId)) {
+            throw new RuntimeException("Car not found");
+        }
+        carRepository.deleteById(carId);
+    }
 }

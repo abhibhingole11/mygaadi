@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import api from "../../api/app";
+import sellerService from "../../services/sellerService";
 import { useAuth } from "../../utils/AuthContext";
 
 const ListCar = () => {
@@ -35,7 +35,7 @@ const ListCar = () => {
     formData.append("image", image); // 🔥 must be "image"
 
     try {
-     await api.post("/api/seller/cars", formData);
+      await sellerService.addCar(formData);
 
 
       alert("Car submitted for admin approval");
