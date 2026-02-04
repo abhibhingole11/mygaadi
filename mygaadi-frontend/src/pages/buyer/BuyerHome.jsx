@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import api from "../../api/app";
 import CarCard from "../../components/CarCard";
 import { useAuth } from "../../utils/AuthContext";
-import { dummyCars } from "../../data/dummyCars";
+
+import TestToast from "../../components/TestToast";
+import { toast } from "react-toastify";
+
 
 const BuyerHome = () => {
   const [cars, setCars] = useState([]);
@@ -18,6 +21,11 @@ const BuyerHome = () => {
   const { user } = useAuth();
 
   const handleSearch = async () => {
+    if (!user) {
+      toast.info("Please login to search/filter cars");
+      navigate("/login");
+      return;
+    }
     try {
       const params = {};
 
@@ -35,22 +43,21 @@ const BuyerHome = () => {
 
 
 
-  // 🔹 Load available cars (with fallback to dummy data)
+  // 🔹 Load available cars
   const loadCars = async () => {
     try {
       const res = await api.get("/api/buyer/cars");
-      if (res.data && res.data.length > 0) {
+      if (res.data) {
         setCars(res.data);
-      } else {
-        // Fallback to dummy data if API returns empty or fails (and we want to show something)
-        // For now, if no user is logged in, we DEFINITELY show dummy data if the API is empty
-        setCars(dummyCars);
       }
     } catch (err) {
-      console.error("Failed to load cars, using dummy data", err);
-      setCars(dummyCars);
+      console.error("Failed to load cars", err);
+      // If unauthorized, it might be because the backend endpoint is protected.
+      // However, the user wants visitors to see real data.
+      toast.error("Failed to load car listings");
     }
   };
+
 
   // 🔹 Load wishlist (only carIds)
   const loadWishlist = async () => {
@@ -75,6 +82,7 @@ const BuyerHome = () => {
   // 👁 View details
   const handleView = (car) => {
     if (!user) {
+      toast.info("Please login to view details");
       navigate("/login");
       return;
     }
@@ -82,24 +90,64 @@ const BuyerHome = () => {
   };
 
 
-  // 🛒 Buy car
+  // 🛒 Buy car (Razorpay Integration)
   const handleBuy = async (car) => {
     if (!user) {
+      toast.info("Please login to buy cars");
       navigate("/login");
       return;
     }
 
     try {
-      await api.post("/api/buyer/buy", {
-        buyerId: user.userId,
-        carId: car.carId,
-      });
+      // 1. Create order on backend
+      const orderRes = await api.post(`/api/buyer/buy/create-order/${car.carId}`);
+      const orderId = orderRes.data;
 
-      alert("Car purchased successfully");
-      loadCars();
-      loadWishlist();
+      // 2. Configure Razorpay options
+      const options = {
+        key: "rzp_test_SC1xMbhAbQJNMK", // Replace with your Razorpay Key ID
+        amount: car.price * 100, // Amount in paise
+        currency: "INR",
+        name: "MyGaadi",
+        description: `Purchase ${car.make} ${car.model}`,
+        order_id: orderId,
+        handler: async (response) => {
+          try {
+            // 3. Verify payment on backend
+            const verifyRes = await api.post("/api/buyer/buy/verify", {
+              buyerId: user.userId,
+              carId: car.carId,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+            });
+
+            toast.success(verifyRes.data || "Car purchased successfully!");
+            loadCars();
+            loadWishlist();
+          } catch (err) {
+            console.error(err);
+            toast.error("Payment verification failed");
+          }
+        },
+        prefill: {
+          name: user.firstName + " " + user.lastName,
+          email: user.email,
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.on("payment.failed", (response) => {
+        toast.error("Payment Failed: " + response.error.description);
+      });
+      rzp.open();
+
     } catch (err) {
-      alert("Unable to buy car");
+      console.error(err);
+      toast.error("Unable to initiate purchase");
     }
   };
 
@@ -107,13 +155,7 @@ const BuyerHome = () => {
   // ❤️ Add to wishlist
   const handleWishlist = async (car) => {
     if (!user) {
-      navigate("/login");
-      return;
-    }
-
-    // Check if it's a dummy car
-    if (car.carId.toString().startsWith("d")) {
-      alert("This is a demo car! Please login to view real inventory.");
+      toast.info("Please login to manage wishlist");
       navigate("/login");
       return;
     }
@@ -123,6 +165,7 @@ const BuyerHome = () => {
         buyerId: user.userId,
         carId: car.carId,
       });
+
 
       alert("Added to wishlist");
       loadWishlist();
@@ -203,6 +246,8 @@ const BuyerHome = () => {
 
           </div>
         </div>
+        <TestToast />
+
 
         <h2 className="mb-4 fw-bold">Available Cars</h2>
 

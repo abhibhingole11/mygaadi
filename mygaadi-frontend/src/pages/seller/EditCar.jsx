@@ -37,7 +37,7 @@ const EditCar = () => {
             const fetchCar = async () => {
                 try {
                     const cars = await sellerService.getSellerCars(user.userId);
-                    const foundCar = cars.find((c) => c.id === parseInt(carId));
+                    const foundCar = cars.find((c) => c.carId === parseInt(carId));
                     if (foundCar) {
                         setCarData({
                             make: foundCar.make,

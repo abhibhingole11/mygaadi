@@ -8,4 +8,5 @@ public class LoginResponse {
     public String email;
     public String firstName;
     public Role role;
+    public String token;
 }

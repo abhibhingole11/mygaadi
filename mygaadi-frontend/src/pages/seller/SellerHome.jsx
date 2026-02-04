@@ -32,7 +32,7 @@ const SellerHome = () => {
       try {
         await sellerService.deleteCar(carId);
         // Remove from UI
-        setCars(cars.filter((car) => car.id !== carId));
+        setCars(cars.filter((car) => car.carId !== carId));
         alert("Car deleted successfully");
       } catch (error) {
         console.error("Error deleting car:", error);
@@ -61,7 +61,7 @@ const SellerHome = () => {
       ) : (
         <div className="row">
           {cars.map((car) => (
-            <div className="col-md-4 mb-4" key={car.id}>
+            <div className="col-md-4 mb-4" key={car.carId}>
               <div className="card h-100 shadow-sm">
                 <img
                   src={car.imageUrl || car.image || "https://placehold.co/600x400?text=No+Image"}
@@ -79,14 +79,14 @@ const SellerHome = () => {
 
                   <div className="d-flex gap-2 mt-3">
                     <Link
-                      to={`/seller/edit-car/${car.id}`}
+                      to={`/seller/edit-car/${car.carId}`}
                       state={{ car }} // Pass car data to avoid refetching
                       className="btn btn-outline-primary flex-grow-1"
                     >
                       Edit
                     </Link>
                     <button
-                      onClick={() => handleDelete(car.id)}
+                      onClick={() => handleDelete(car.carId)}
                       className="btn btn-outline-danger flex-grow-1"
                     >
                       Delete

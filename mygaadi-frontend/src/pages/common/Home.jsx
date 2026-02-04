@@ -10,19 +10,19 @@ const Home = () => {
       id: 1,
       name: "Mahindra Thar",
       price: "15,00,000",
-      image: "/images/thar-2025-exterior-right-front-three-quarter-5.avif",
+      image: "",
     },
     {
       id: 2,
       name: "Maruti Swift",
       price: "7,50,000",
-      image: "/images/swift-exterior-right-front-three-quarter-31.avif",
+      image: "",
     },
     {
       id: 3,
       name: "Mahindra Scorpio N",
       price: "18,00,000",
-      image: "/images/scorpio-n-exterior-right-front-three-quarter-4.avif",
+      image: "",
     },
   ];
 

@@ -53,4 +53,9 @@ public class SellerCarController {
         carService.deleteCar(carId);
         return "Car deleted successfully";
     }
+
+    @GetMapping("/sales/{sellerId}")
+    public List<com.mygaadi.dto.SellerSalesResponse> getSellerSales(@PathVariable Long sellerId) {
+        return carService.getSellerSales(sellerId);
+    }
 }

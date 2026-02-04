@@ -35,16 +35,17 @@ public class User {
     @Column(nullable = false)
     private boolean restricted = false;
 
+    private String phone;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
     // getters & setters
     public boolean getRestricted() {
-    	return restricted;
+        return restricted;
     }
 
-	public void setRestricted(boolean b) {
-		restricted = b;
-		
-	}
+    public void setRestricted(boolean b) {
+        restricted = b;
+
+    }
 }

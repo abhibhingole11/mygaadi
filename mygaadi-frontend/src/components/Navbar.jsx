@@ -59,11 +59,18 @@ const Navbar = () => {
 
           {/* 🟨 SELLER */}
           {user && user.role === "SELLER" && (
-            <li className="nav-item">
-              <Link className="nav-link" to="/seller">
-                Dashboard
-              </Link>
-            </li>
+            <>
+              <li className="nav-item">
+                <Link className="nav-link" to="/seller">
+                  Dashboard
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/seller/sales">
+                  Sales
+                </Link>
+              </li>
+            </>
           )}
 
 

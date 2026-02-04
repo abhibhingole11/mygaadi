@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.mygaadi.dto.AddCarRequest;
 import com.mygaadi.dto.AdminCarResponse;
 import com.mygaadi.dto.BuyerCarResponse;
 import com.mygaadi.entity.Car;
@@ -18,6 +17,11 @@ import com.mygaadi.repository.CarRepository;
 import com.mygaadi.repository.TransactionRepository;
 import com.mygaadi.repository.UserRepository;
 import com.mygaadi.repository.WishlistRepository;
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import com.razorpay.Utils;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class CarService {
@@ -27,15 +31,20 @@ public class CarService {
     private final TransactionRepository transactionRepository;
     private final WishlistRepository wishlistRepository;
     private final CloudinaryService cloudinaryService;
+    private final RazorpayClient razorpayClient;
+
+    @Value("${razorpay.key.secret}")
+    private String razorpaySecret;
 
     public CarService(CarRepository carRepository, UserRepository userRepository,
             TransactionRepository transactionRepository, WishlistRepository wishlistRepository,
-            CloudinaryService cloudinaryService) {
+            CloudinaryService cloudinaryService, RazorpayClient razorpayClient) {
         this.carRepository = carRepository;
         this.userRepository = userRepository;
         this.transactionRepository = transactionRepository;
         this.wishlistRepository = wishlistRepository;
         this.cloudinaryService = cloudinaryService;
+        this.razorpayClient = razorpayClient;
     }
 
     public List<Car> getPendingCars() {
@@ -69,13 +78,13 @@ public class CarService {
     }
 
     public void approveCar(Long carId) {
-        Car car = carRepository.findById(carId).orElseThrow(() -> new RuntimeException("car non found"));
+        Car car = carRepository.findById(carId).orElseThrow(() -> new RuntimeException("Car not found"));
         car.setStatus(CarStatus.APPROVED);
         carRepository.save(car);
     }
 
     public void rejectCar(Long carId) {
-        Car car = carRepository.findById(carId).orElseThrow(() -> new RuntimeException("car not fond"));
+        Car car = carRepository.findById(carId).orElseThrow(() -> new RuntimeException("Car not found"));
         car.setStatus(CarStatus.REJECTED);
         carRepository.save(car);
 
@@ -132,7 +141,7 @@ public class CarService {
                     dto.price = car.getPrice();
                     dto.fuelType = car.getFuelType();
                     dto.transmission = car.getTransmission();
-                    dto.sellerName = car.getSeller().getFirstName();
+                    dto.imageUrl = car.getImageUrl();
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -163,6 +172,36 @@ public class CarService {
         // remove from wishlist
         wishlistRepository.findByBuyerAndCar(buyer, car)
                 .ifPresent(wishlistRepository::delete);
+    }
+
+    public String createOrder(Long carId) {
+        try {
+            Car car = carRepository.findById(carId)
+                    .orElseThrow(() -> new RuntimeException("Car not found"));
+
+            JSONObject orderRequest = new JSONObject();
+            orderRequest.put("amount", (int) (car.getPrice() * 100)); // amount in paise
+            orderRequest.put("currency", "INR");
+            orderRequest.put("receipt", "txn_" + carId + "_" + System.currentTimeMillis());
+
+            Order order = razorpayClient.orders.create(orderRequest);
+            return order.get("id");
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating Razorpay order: " + e.getMessage());
+        }
+    }
+
+    public boolean verifyPayment(String orderId, String paymentId, String signature) {
+        try {
+            JSONObject attributes = new JSONObject();
+            attributes.put("razorpay_order_id", orderId);
+            attributes.put("razorpay_payment_id", paymentId);
+            attributes.put("razorpay_signature", signature);
+
+            return Utils.verifyPaymentSignature(attributes, razorpaySecret);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public List<AdminCarResponse> getAllCars() {
@@ -212,5 +251,23 @@ public class CarService {
             throw new RuntimeException("Car not found");
         }
         carRepository.deleteById(carId);
+    }
+
+    public List<com.mygaadi.dto.SellerSalesResponse> getSellerSales(Long sellerId) {
+        return transactionRepository.findByCar_Seller_UserId(sellerId)
+                .stream()
+                .map(tx -> {
+                    com.mygaadi.dto.SellerSalesResponse dto = new com.mygaadi.dto.SellerSalesResponse();
+                    dto.transactionId = tx.getTransactionId();
+                    dto.carMake = tx.getCar().getMake();
+                    dto.carModel = tx.getCar().getModel();
+                    dto.carPrice = tx.getCar().getPrice();
+                    dto.buyerName = tx.getBuyer().getFirstName() + " " + tx.getBuyer().getLastName();
+                    dto.buyerEmail = tx.getBuyer().getEmail();
+                    dto.buyerPhone = tx.getBuyer().getPhone();
+                    dto.purchasedAt = tx.getPurchasedAt();
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 }

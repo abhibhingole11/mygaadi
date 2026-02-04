@@ -9,15 +9,14 @@ import com.mygaadi.service.AuthService;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
     private final AuthService authService;
+
     @GetMapping("/hello")
     public String hellow() {
-    	return "hellow rodl:";
+        return "hellow rodl:";
     }
-    
 
     public AuthController(AuthService authService) {
         this.authService = authService;
@@ -31,6 +30,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
+        System.out.println("login controller:" + request.toString());
         return authService.login(request);
     }
 }
