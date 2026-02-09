@@ -1,6 +1,5 @@
 package com.mygaadi.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.mygaadi.service.CloudinaryService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 public class ImageUploadController {
 
     private final CloudinaryService cloudinaryService;

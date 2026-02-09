@@ -2,7 +2,6 @@ package com.mygaadi.controller;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,7 +13,6 @@ import com.mygaadi.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/admin/users")
-@CrossOrigin(origins = "http://localhost:5173")
 public class AdminUserController {
 
     private final UserRepository userRepository;
@@ -22,22 +20,21 @@ public class AdminUserController {
     public AdminUserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
     @GetMapping
-    public List<User> getAllusers(){
-    	return userRepository.findAll();
+    public List<User> getAllusers() {
+        return userRepository.findAll();
     }
 
     @PutMapping("/{userId}/toggle-restrict")
     public void toggleRestrict(@PathVariable Long userId) {
-    	System.out.println(userId);
+        System.out.println(userId);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         user.setRestricted(!user.getRestricted());
 
-
         userRepository.save(user);
     }
 }
-

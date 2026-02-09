@@ -7,7 +7,6 @@ import com.mygaadi.service.CarService;
 
 @RestController
 @RequestMapping("/api/buyer/buy")
-@CrossOrigin(origins = "http://localhost:5173")
 public class BuyerPurchaseController {
 
     private final CarService carService;

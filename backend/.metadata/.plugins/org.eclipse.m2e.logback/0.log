@@ -1824,3 +1824,8 @@ org.eclipse.core.runtime.CoreException: Could not resolve artifact org.webjars:s
 2026-02-09 12:12:05,642 [Stop Help Server] INFO  o.e.jetty.server.AbstractConnector - Stopped ServerConnector@612b34fe{HTTP/1.1, (http/1.1)}{127.0.0.1:0}
 2026-02-09 12:12:49,714 [Worker-5: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
 2026-02-09 15:43:28,061 [Worker-2: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2026-02-09 17:01:32,243 [Start Help Server] INFO  org.eclipse.jetty.server.Server - jetty-12.0.16; built: 2024-12-09T21:02:54.535Z; git: c3f88bafb4e393f23204dc14dc57b042e84debc7; jvm 21.0.6+7-LTS
+2026-02-09 17:01:32,557 [Start Help Server] INFO  o.e.j.server.handler.ContextHandler - Started oeje8n.ContextHandler$CoreContextHandler@7fd3133f{/help,/help,b=null,a=AVAILABLE,h=oeje8n.ContextHandler$CoreContextHandler$CoreToNestedHandler@7a594662{STARTED}}
+2026-02-09 17:01:32,572 [Start Help Server] INFO  o.e.j.s.DefaultSessionIdManager - Session workerName=node0
+2026-02-09 17:01:32,674 [Start Help Server] INFO  o.e.jetty.server.AbstractConnector - Started ServerConnector@6e7c3edd{HTTP/1.1, (http/1.1)}{127.0.0.1:61214}
+2026-02-09 17:01:32,765 [Start Help Server] INFO  org.eclipse.jetty.server.Server - Started oejs.Server@9572b68{STARTING}[12.0.16,sto=0] @4705820ms

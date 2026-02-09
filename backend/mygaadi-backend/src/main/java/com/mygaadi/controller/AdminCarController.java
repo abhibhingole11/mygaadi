@@ -10,7 +10,6 @@ import com.mygaadi.service.CarService;
 
 @RestController
 @RequestMapping("/api/admin/cars")
-@CrossOrigin(origins = "http://localhost:5173")
 public class AdminCarController {
 
     private final CarService carService;

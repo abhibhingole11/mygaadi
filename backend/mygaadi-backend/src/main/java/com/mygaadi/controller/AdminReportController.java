@@ -3,7 +3,6 @@ package com.mygaadi.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,14 +14,13 @@ import com.mygaadi.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/admin/reports")
-@CrossOrigin(origins = "http://localhost:5173")
 public class AdminReportController {
 
     private final UserRepository userRepository;
     private final CarRepository carRepository;
 
     public AdminReportController(UserRepository userRepository,
-                                 CarRepository carRepository) {
+            CarRepository carRepository) {
         this.userRepository = userRepository;
         this.carRepository = carRepository;
     }

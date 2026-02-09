@@ -31,40 +31,36 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(auth -> auth
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> auth
 
-                // Allow preflight
-                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+                        // Allow preflight
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
 
-                // ✅ Swagger (IMPORTANT)
-                .requestMatchers(
-                    "/swagger-ui.html",
-                    "/swagger-ui/**",
-                    "/v3/api-docs/**",
-                    "/v3/api-docs.yaml"
-                ).permitAll()
+                        // ✅ Swagger (IMPORTANT)
+                        .requestMatchers(
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs.yaml")
+                        .permitAll()
 
-                // Auth APIs
-                .requestMatchers("/api/auth/**").permitAll()
+                        // Auth APIs
+                        .requestMatchers("/api/auth/**").permitAll()
 
-                // Buyer APIs (public)
-                .requestMatchers("/api/buyer/**").permitAll()
+                        // Buyer APIs (public)
+                        .requestMatchers("/api/buyer/**").permitAll()
 
-                // Role-based APIs
-                .requestMatchers("/api/seller/**").hasRole("SELLER")
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        // Role-based APIs
+                        .requestMatchers("/api/seller/**").hasRole("SELLER")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-                // Everything else secured
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(
-                    org.springframework.security.config.http.SessionCreationPolicy.STATELESS
-                )
-            )
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                        // Everything else secured
+                        .anyRequest().authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(
+                        org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -73,12 +69,13 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // ✅ Allow all origins (safe for now, fix later if needed)
-        config.setAllowedOriginPatterns(Arrays.asList("*"));
+        // ✅ Allow production and local origins
+        config.setAllowedOrigins(Arrays.asList(
+                "http://localhost:5173",
+                "https://mygaadi.vercel.app"));
 
         config.setAllowedMethods(Arrays.asList(
-            "GET", "POST", "PUT", "DELETE", "OPTIONS"
-        ));
+                "GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
