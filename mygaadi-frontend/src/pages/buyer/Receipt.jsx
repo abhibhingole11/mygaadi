@@ -50,7 +50,7 @@ const Receipt = () => {
             const cappedAmount = paymentAmount > 5000000 ? 5000000 : paymentAmount;
 
             const options = {
-                key: "rzp_test_SC1xMbhAbQJNMK",
+                key: import.meta.env.VITE_RAZORPAY_KEY || "rzp_test_SC1xMbhAbQJNMK",
                 amount: cappedAmount, // Capped at ₹50,000 for test mode compatibility
                 currency: "INR",
                 name: "MyGaadi",
