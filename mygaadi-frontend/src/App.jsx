@@ -19,6 +19,7 @@ import ManageUsers from "./pages/admin/ManageUsers";
 import ManageCars from "./pages/admin/ManageCars";
 import ViewReports from "./pages/admin/ViewReports";
 import ToastProvider from "./components/ToastProvider";
+import Receipt from "./pages/buyer/Receipt";
 
 const HomeRedirector = () => {
   const { user, loading } = useAuth();
@@ -108,6 +109,14 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={["BUYER"]}>
               <BuyerHome />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/receipt"
+          element={
+            <ProtectedRoute allowedRoles={["BUYER"]}>
+              <Receipt />
             </ProtectedRoute>
           }
         />

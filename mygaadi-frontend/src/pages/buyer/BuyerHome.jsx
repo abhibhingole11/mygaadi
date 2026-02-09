@@ -90,65 +90,14 @@ const BuyerHome = () => {
   };
 
 
-  // 🛒 Buy car (Razorpay Integration)
+  // 🛒 Buy car (Navigate to Receipt)
   const handleBuy = async (car) => {
     if (!user) {
       toast.info("Please login to buy cars");
       navigate("/login");
       return;
     }
-
-    try {
-      // 1. Create order on backend
-      const orderRes = await api.post(`/api/buyer/buy/create-order/${car.carId}`);
-      const orderId = orderRes.data;
-
-      // 2. Configure Razorpay options
-      const options = {
-        key: "rzp_test_SC1xMbhAbQJNMK", // Replace with your Razorpay Key ID
-        amount: car.price * 100, // Amount in paise
-        currency: "INR",
-        name: "MyGaadi",
-        description: `Purchase ${car.make} ${car.model}`,
-        order_id: orderId,
-        handler: async (response) => {
-          try {
-            // 3. Verify payment on backend
-            const verifyRes = await api.post("/api/buyer/buy/verify", {
-              buyerId: user.userId,
-              carId: car.carId,
-              razorpayOrderId: response.razorpay_order_id,
-              razorpayPaymentId: response.razorpay_payment_id,
-              razorpaySignature: response.razorpay_signature,
-            });
-
-            toast.success(verifyRes.data || "Car purchased successfully!");
-            loadCars();
-            loadWishlist();
-          } catch (err) {
-            console.error(err);
-            toast.error("Payment verification failed");
-          }
-        },
-        prefill: {
-          name: user.firstName + " " + user.lastName,
-          email: user.email,
-        },
-        theme: {
-          color: "#3399cc",
-        },
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.on("payment.failed", (response) => {
-        toast.error("Payment Failed: " + response.error.description);
-      });
-      rzp.open();
-
-    } catch (err) {
-      console.error(err);
-      toast.error("Unable to initiate purchase");
-    }
+    navigate("/receipt", { state: { car } });
   };
 
 

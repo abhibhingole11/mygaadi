@@ -17,8 +17,8 @@ public class BuyerPurchaseController {
     }
 
     @PostMapping("/create-order/{carId}")
-    public String createOrder(@PathVariable Long carId) {
-        return carService.createOrder(carId);
+    public String createOrder(@PathVariable Long carId, @RequestParam Double amount) {
+        return carService.createOrder(carId, amount);
     }
 
     @PostMapping("/verify")

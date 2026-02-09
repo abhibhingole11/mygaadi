@@ -174,13 +174,18 @@ public class CarService {
                 .ifPresent(wishlistRepository::delete);
     }
 
-    public String createOrder(Long carId) {
+    public String createOrder(Long carId, Double totalAmount) {
         try {
-            Car car = carRepository.findById(carId)
-                    .orElseThrow(() -> new RuntimeException("Car not found"));
+            // NOTE: Razorpay TEST mode has a transaction limit (usually ₹5,00,000).
+            // To ensure car purchases work for the demo, we cap the actual payment amount
+            // at ₹50,000 if the car is more expensive.
+            long amountInPaise = (long) (Math.round(totalAmount * 100));
+            if (amountInPaise > 5000000) {
+                amountInPaise = 5000000; // Cap at ₹50,000 for Demo/Test
+            }
 
             JSONObject orderRequest = new JSONObject();
-            orderRequest.put("amount", (int) (car.getPrice() * 100)); // amount in paise
+            orderRequest.put("amount", amountInPaise);
             orderRequest.put("currency", "INR");
             orderRequest.put("receipt", "txn_" + carId + "_" + System.currentTimeMillis());
 

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mygaadi.service.CarService;
@@ -14,25 +15,25 @@ import com.mygaadi.entity.*;
 
 @RestController
 @RequestMapping("/api/buyer/cars")
-@CrossOrigin(origins="http://localhost:5173")
 public class BuyerCarController {
 	private final CarService carService;
+
 	public BuyerCarController(CarService carService) {
 		this.carService = carService;
 	}
-	
+
 	@GetMapping
-	public List<BuyerCarResponse>getApprovedCars(){
+	public List<BuyerCarResponse> getApprovedCars() {
 		return carService.getApprovedCars();
 	}
+
 	@GetMapping("/search")
 	public List<BuyerCarResponse> searchCars(
-	        @RequestParam(required = false) String keyword,
-	        @RequestParam(required = false) Double maxPrice,
-	        @RequestParam(required = false) Integer minYear) {
+			@RequestParam(required = false) String keyword,
+			@RequestParam(required = false) Double maxPrice,
+			@RequestParam(required = false) Integer minYear) {
 
-	    return carService.getCarsByFilters(keyword, maxPrice, minYear);
+		return carService.getCarsByFilters(keyword, maxPrice, minYear);
 	}
-
 
 }

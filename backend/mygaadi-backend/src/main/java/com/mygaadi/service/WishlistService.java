@@ -69,6 +69,9 @@ public class WishlistService {
                     dto.make = w.getCar().getMake();
                     dto.model = w.getCar().getModel();
                     dto.price = w.getCar().getPrice();
+                    dto.year = w.getCar().getYear();
+                    dto.imageUrl = w.getCar().getImageUrl();
+                    dto.sellerName = w.getCar().getSeller().getFirstName() + " " + w.getCar().getSeller().getLastName();
                     return dto;
                 })
                 .collect(Collectors.toList());

@@ -10,7 +10,6 @@ import com.mygaadi.service.WishlistService;
 
 @RestController
 @RequestMapping("/api/buyer/wishlist")
-@CrossOrigin(origins = "http://localhost:5173")
 public class BuyerWishlistController {
 
     private final WishlistService wishlistService;
@@ -20,19 +19,18 @@ public class BuyerWishlistController {
     }
 
     // ➕ Add to wishlist
-//    @PostMapping
-//    public String addToWishlist(@RequestBody AddWishlistRequest request) {
-//        wishlistService.addToWishlist(request);
-//        return "Added to wishlist";
-//    }
+    // @PostMapping
+    // public String addToWishlist(@RequestBody AddWishlistRequest request) {
+    // wishlistService.addToWishlist(request);
+    // return "Added to wishlist";
+    // }
     @PostMapping
     public String addToWishlist(@RequestBody AddWishlistRequest request) {
-        System.out.println("WISHLIST REQUEST → buyerId=" 
-            + request.buyerId + ", carId=" + request.carId);
+        System.out.println("WISHLIST REQUEST → buyerId="
+                + request.buyerId + ", carId=" + request.carId);
         wishlistService.addToWishlist(request);
         return "Added to wishlist";
     }
-
 
     // 📄 View wishlist
     @GetMapping("/{buyerId}")

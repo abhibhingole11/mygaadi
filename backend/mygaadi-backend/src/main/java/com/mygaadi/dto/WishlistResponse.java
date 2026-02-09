@@ -6,4 +6,7 @@ public class WishlistResponse {
     public String make;
     public String model;
     public double price;
+    public int year;
+    public String sellerName;
+    public String imageUrl;
 }

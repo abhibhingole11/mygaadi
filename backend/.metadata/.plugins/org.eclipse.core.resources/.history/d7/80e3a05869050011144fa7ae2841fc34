@@ -1,0 +1,39 @@
+spring.application.name=mygaadi-backend
+# ===============================
+# SERVER
+# ===============================
+server.port=8080
+
+# ===============================
+# DATABASE
+# ===============================
+spring.datasource.url={DATASOUCRCE_URL}
+spring.datasource.username={DATASOURCE_USERNMAE}
+spring.datasource.password={DATASOURCE_PASSWORD}
+
+# ===============================
+# JPA / HIBERNATE
+# ===============================
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+
+# ===============================
+# LOGGING
+# ===============================
+logging.level.org.hibernate.SQL=DEBUG
+
+
+# cloudinary images add
+cloudinary.cloud-name=dhskj1wtb
+cloudinary.api-key=857921912128455
+cloudinary.api-secret=DY3nG-jkj60l6Pd2LDXUQwo4NzY
+
+# JWT configuration
+jwt.secret=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+jwt.expiration=3600000
+
+# Razorpay Configuration
+razorpay.key.id=rzp_test_SC1xMbhAbQJNMK
+razorpay.key.secret=RPMUziIYk6KUwiXx11cv8tSl
