@@ -1800,3 +1800,25 @@ org.eclipse.core.runtime.CoreException: Could not resolve artifact org.webjars:s
 2026-02-09 10:01:56,822 [Worker-24: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
 2026-02-09 10:01:57,007 [Worker-24: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
 2026-02-09 10:01:57,016 [Worker-24: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\project 4\github repo\mygaadi\backend\mygaadi-backend\src\test\resources
+2026-02-09 10:34:43,873 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2026-02-09 10:34:43,909 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2026-02-09 10:34:43,917 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\project 4\github repo\mygaadi\backend\mygaadi-backend\src\test\resources
+2026-02-09 10:34:50,915 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2026-02-09 10:34:50,915 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2026-02-09 10:34:50,922 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\project 4\github repo\mygaadi\backend\mygaadi-backend\src\test\resources
+2026-02-09 11:42:11,581 [Start Help Server] INFO  org.eclipse.jetty.server.Server - jetty-12.0.16; built: 2024-12-09T21:02:54.535Z; git: c3f88bafb4e393f23204dc14dc57b042e84debc7; jvm 21.0.6+7-LTS
+2026-02-09 11:42:11,655 [Start Help Server] INFO  o.e.j.server.handler.ContextHandler - Started oeje8n.ContextHandler$CoreContextHandler@5ec4252{/help,/help,b=null,a=AVAILABLE,h=oeje8n.ContextHandler$CoreContextHandler$CoreToNestedHandler@4a5393e9{STARTED}}
+2026-02-09 11:42:11,656 [Start Help Server] INFO  o.e.j.s.DefaultSessionIdManager - Session workerName=node0
+2026-02-09 11:42:11,695 [Start Help Server] INFO  o.e.jetty.server.AbstractConnector - Started ServerConnector@612b34fe{HTTP/1.1, (http/1.1)}{127.0.0.1:52051}
+2026-02-09 11:42:11,728 [Start Help Server] INFO  org.eclipse.jetty.server.Server - Started oejs.Server@2decf600{STARTING}[12.0.16,sto=0] @9465361ms
+2026-02-09 12:05:34,219 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2026-02-09 12:05:34,232 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2026-02-09 12:05:34,243 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\project 4\github repo\mygaadi\backend\mygaadi-backend\src\test\resources
+2026-02-09 12:05:41,665 [Worker-50: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2026-02-09 12:05:41,669 [Worker-50: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2026-02-09 12:05:41,673 [Worker-50: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\project 4\github repo\mygaadi\backend\mygaadi-backend\src\test\resources
+2026-02-09 12:10:46,726 [Worker-56: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2026-02-09 12:10:46,733 [Worker-56: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2026-02-09 12:10:46,739 [Worker-56: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\project 4\github repo\mygaadi\backend\mygaadi-backend\src\test\resources
+2026-02-09 12:12:05,632 [Stop Help Server] INFO  org.eclipse.jetty.server.Server - Stopped oejs.Server@2decf600{STOPPING}[12.0.16,sto=0]
+2026-02-09 12:12:05,642 [Stop Help Server] INFO  o.e.jetty.server.AbstractConnector - Stopped ServerConnector@612b34fe{HTTP/1.1, (http/1.1)}{127.0.0.1:0}
