@@ -278,3 +278,10 @@ AT THE TIME DEPLOYING----------
 Caused by: java.lang.IllegalArgumentException: 'url' must start with "jdbc"
 	at org.springframework.util.Assert.isTrue(Assert.java:117) ~[spring-core-7.0.2.jar:7.0.2]
 	at org.springframework.boot.jdbc.DatabaseDriver.fromJdbcUrl(DatabaseDriver.java:314) ~[spring-boot-jdbc-4.0.1.jar:4.0.1]
+
+
+
+	----------
+	cors error at the time deploying
+	installHook.js:1 Failed to load cars secode: "ERR_NETWORK"config: {transitional: {…}, adapter: Array(3), transformRequest: Array(1), transformResponse: Array(1), timeout: 0, …}event: ProgressEvent {isTrusted: true, lengthComputable: false, loaded: 0, total: 0, type: 'error', …}message: "Network Error"name: "AxiosError"request: XMLHttpRequest {onreadystatechange: null, readyState: 4, timeout: 0, withCredentials: false, upload: XMLHttpRequestUpload, …}stack: "AxiosError: Network Error\n at R.onerror (https://mygaadi.vercel.app/assets/index-BGssaTw2.js:13:6200)\n at hl.request (https://mygaadi.vercel.app/assets/index-BGssaTw2.js:15:2094)\n at async v (https://mygaadi.vercel.app/assets/index-BGssaTw2.js:17:23241)"[[Prototype]]: Error overrideMethod @ installHook.js:1Understand this error localhost:8080/api/buyer/cars:1 Failed to load resource: net::ERR_CONNECTION_REFUSED
+	------------------------
