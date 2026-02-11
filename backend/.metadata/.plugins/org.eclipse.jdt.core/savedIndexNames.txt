@@ -68,7 +68,6 @@ INDEX VERSION 1.134+C:\project 4\github repo\mygaadi\backend\.metadata\.plugins\
 2043394384.index
 563759443.index
 2062872754.index
-1892838647.index
 3939564685.index
 1738353169.index
 816143270.index

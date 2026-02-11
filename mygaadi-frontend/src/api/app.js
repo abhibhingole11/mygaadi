@@ -1,7 +1,10 @@
 import axios from "axios";
 
+const apiHost = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+console.log("Connecting to API at:", apiHost);
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080",
+  baseURL: apiHost,
 });
 
 // 🔐 Attach JWT to every request
